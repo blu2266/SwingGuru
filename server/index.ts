@@ -1,8 +1,55 @@
 import express, { type Request, Response, NextFunction } from "express";
+import cors, { type CorsOptions, type CorsOriginCallback } from "cors";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
+
+const defaultCorsOrigins = new Set<string>([
+  "capacitor://localhost",
+]);
+
+const localhostPatterns = [
+  /^https?:\/\/localhost(?::\d+)?$/i,
+  /^https?:\/\/127\.0\.0\.1(?::\d+)?$/i,
+];
+
+if (process.env.CORS_ALLOWED_ORIGINS) {
+  for (const origin of process.env.CORS_ALLOWED_ORIGINS.split(",")) {
+    const trimmed = origin.trim();
+    if (trimmed) {
+      defaultCorsOrigins.add(trimmed);
+    }
+  }
+}
+
+if (process.env.REPLIT_DOMAINS) {
+  for (const domain of process.env.REPLIT_DOMAINS.split(",")) {
+    const trimmed = domain.trim();
+    if (trimmed) {
+      defaultCorsOrigins.add(`https://${trimmed}`);
+    }
+  }
+}
+
+const corsOptions = {
+  origin(origin: string | undefined, callback: CorsOriginCallback) {
+    if (!origin) {
+      callback(null, true);
+      return;
+    }
+
+    const isAllowed =
+      defaultCorsOrigins.has(origin) ||
+      localhostPatterns.some((pattern) => pattern.test(origin));
+
+    callback(null, isAllowed);
+  },
+  credentials: true,
+} satisfies CorsOptions;
+
+app.use(cors(corsOptions));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

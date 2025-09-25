@@ -27,6 +27,12 @@ const config: CapacitorConfig = {
       splashImmersive: true
     }
   },
+  extra: {
+    apiBaseUrl:
+      process.env.NATIVE_API_BASE_URL ||
+      process.env.VITE_API_BASE_URL ||
+      "",
+  },
   ios: {
     allowsLinkPreview: false,
     // Only enable debugging in development mode for security
