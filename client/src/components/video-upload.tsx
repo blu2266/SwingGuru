@@ -5,6 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
+import { apiUrl } from "@/lib/api";
 import { CloudUpload, Video, Play, Check, Loader2 } from "lucide-react";
 
 interface VideoUploadProps {
@@ -29,9 +30,10 @@ export function VideoUpload({ onAnalysisComplete }: VideoUploadProps) {
 
   const uploadMutation = useMutation({
     mutationFn: async (formData: FormData) => {
-      const response = await fetch("/api/analyze-swing", {
+      const response = await fetch(apiUrl("/api/analyze-swing"), {
         method: "POST",
         body: formData,
+        credentials: "include",
       });
       
       if (!response.ok) {

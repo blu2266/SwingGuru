@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
+import { apiUrl } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -36,10 +37,11 @@ export function AnalysisResults({ analysisId, onBack }: AnalysisResultsProps) {
   
   const saveMutation = useMutation({
     mutationFn: async (data: { isSaved: boolean; notes?: string; clubId?: string }) => {
-      const response = await fetch(`/api/swing-analyses/${analysisId}/save`, {
+      const response = await fetch(apiUrl(`/api/swing-analyses/${analysisId}/save`), {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
+        credentials: "include",
       });
       if (!response.ok) throw new Error("Failed to save analysis");
       return response.json();

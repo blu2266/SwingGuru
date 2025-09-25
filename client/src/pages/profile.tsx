@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
+import { apiUrl } from "@/lib/api";
 import { BottomNavigation } from "@/components/bottom-navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -53,10 +54,11 @@ export default function Profile() {
   // Mutations
   const createClubMutation = useMutation({
     mutationFn: async (data: ClubFormData) => {
-      const response = await fetch("/api/clubs", {
+      const response = await fetch(apiUrl("/api/clubs"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
+        credentials: "include",
       });
       if (!response.ok) throw new Error("Failed to create club");
       return response.json();
@@ -74,7 +76,7 @@ export default function Profile() {
 
   const updateClubMutation = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: Partial<ClubFormData> }) => {
-      const response = await fetch(`/api/clubs/${id}`, {
+      const response = await fetch(apiUrl(`/api/clubs/${id}`), {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -96,7 +98,7 @@ export default function Profile() {
 
   const deleteClubMutation = useMutation({
     mutationFn: async (id: string) => {
-      const response = await fetch(`/api/clubs/${id}`, {
+      const response = await fetch(apiUrl(`/api/clubs/${id}`), {
         method: "DELETE",
         credentials: "include",
       });
@@ -114,7 +116,7 @@ export default function Profile() {
 
   const updatePreferencesMutation = useMutation({
     mutationFn: async (data: Partial<UserPreferences>) => {
-      const response = await fetch(`/api/preferences`, {
+      const response = await fetch(apiUrl(`/api/preferences`), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),

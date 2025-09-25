@@ -1,3 +1,5 @@
+import { apiUrl } from "@/lib/api";
+
 // Helper functions for handling media URLs - Always use authenticated backend endpoints
 
 export function getVideoUrl(analysis: any): string {
@@ -7,11 +9,11 @@ export function getVideoUrl(analysis: any): string {
   // If saved to object storage, use the secure /objects/* endpoint
   if (analysis.objectStorageVideoPath && analysis.objectStorageVideoPath.startsWith('/objects/')) {
     // This endpoint requires authentication and checks ownership
-    return analysis.objectStorageVideoPath;
+    return apiUrl(analysis.objectStorageVideoPath);
   }
-  
+
   // Fall back to local filesystem endpoint (also requires auth now)
-  return `/api/videos/${analysis.videoPath.split('/').pop()}`;
+  return apiUrl(`/api/videos/${analysis.videoPath.split('/').pop()}`);
 }
 
 export function getFrameUrl(analysis: any, frameName: string): string {
@@ -29,13 +31,13 @@ export function getFrameUrl(analysis: any, frameName: string): string {
       const path = analysis.objectStorageFramePaths[frameKey];
       // Only use if it's an internal /objects/* path, not a direct URL
       if (path.startsWith('/objects/')) {
-        return path;
+        return apiUrl(path);
       }
     }
   }
-  
+
   // Fall back to local filesystem endpoint (also requires auth now)
-  return `/api/frames/${analysis.id}/${frameName}`;
+  return apiUrl(`/api/frames/${analysis.id}/${frameName}`);
 }
 
 export function getFullSwingGifUrl(analysis: any): string {
@@ -46,12 +48,12 @@ export function getFullSwingGifUrl(analysis: any): string {
     const path = analysis.objectStorageFramePaths['full_swing'];
     // Only use if it's an internal /objects/* path, not a direct URL
     if (path.startsWith('/objects/')) {
-      return path;
+      return apiUrl(path);
     }
   }
-  
+
   // Fall back to local filesystem endpoint (also requires auth now)
-  return `/api/frames/${analysis.id}/full_swing.gif`;
+  return apiUrl(`/api/frames/${analysis.id}/full_swing.gif`);
 }
 
 export function getPhaseGifUrl(analysis: any, phaseName: string): string {
