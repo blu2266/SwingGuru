@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Play, Target, TrendingUp, Users } from "lucide-react";
+import { apiUrl } from "@/lib/api";
 
 export default function Landing() {
   return (
@@ -20,8 +21,10 @@ export default function Landing() {
             Upload your golf swing videos and get instant, professional-level analysis. 
             Track your progress, manage your clubs, and improve your game with AI-powered insights.
           </p>
-          <Button 
-            onClick={() => window.location.href = "/api/login"}
+          <Button
+            onClick={() => {
+              window.location.href = apiUrl("/api/login");
+            }}
             size="lg" 
             className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 text-lg"
           >
@@ -126,8 +129,10 @@ export default function Landing() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button 
-                onClick={() => window.location.href = "/api/login"}
+              <Button
+                onClick={() => {
+                  window.location.href = apiUrl("/api/login");
+                }}
                 size="lg" 
                 className="bg-green-600 hover:bg-green-700 text-white"
               >
